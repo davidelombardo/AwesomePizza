@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @Slf4j
 public class OrderServiceImpl implements OrderService {
-    private Map<Integer, OrderResponse> orders = new HashMap<>();
-    private AtomicInteger nextNumberOrder = new AtomicInteger(1);
+    private Map<Integer, OrderResponse> orders;
+    private AtomicInteger nextNumberOrder;
 
     public OrderServiceImpl() {
         this.orders = new HashMap<>();
@@ -27,8 +27,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> createOrder(List<OrderTO> orderTOList) {
         List<OrderResponse> orderResponses = new ArrayList<>();
-
-            orderTOList.forEach(orderTO1 -> {
+        log.info("Begin orders creation");
+        orderTOList.forEach(orderTO1 -> {
                 OrderResponse orderResponse = new OrderResponse();
                 int numberOrderIncremented = nextNumberOrder.getAndIncrement();
                 orderResponse.setNumberOrder(numberOrderIncremented);
@@ -36,7 +36,6 @@ public class OrderServiceImpl implements OrderService {
                 this.orders.put(numberOrderIncremented, orderResponse);
                 orderResponses.add(orderResponse);
             });
-
         return orderResponses;
     }
 
@@ -44,19 +43,22 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse checkOrder(int orderNumber) {
         OrderResponse orderResponse = orders.get(orderNumber);
         if (Objects.isNull(orderResponse)) {
+            log.error("Order with number " + orderNumber + " not found.");
             throw new NoSuchOrderException("Order with number " + orderNumber + " not found.");
         }
-
         Integer firstOrderNumber = null;
         if (!orders.isEmpty()) {
             firstOrderNumber = orders.keySet().iterator().next();
         }
         if (Objects.nonNull(firstOrderNumber) && firstOrderNumber < orderNumber) {
+            log.info("The order " + orderResponse.getNumberOrder() + " is not ready");
             orderResponse.setStatus("The order " + orderResponse.getNumberOrder() + " is not ready");
         } else {
+            log.info("The order " + orderResponse.getNumberOrder() + " is ready");
             orderResponse.setStatus("The order " + orderResponse.getNumberOrder() + " is ready");
             orders.remove(orderNumber);
         }
         return orderResponse;
     }
+
 }
