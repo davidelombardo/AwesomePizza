@@ -53,7 +53,7 @@ public class OrderControllerTest {
         try {
             orderController.createOrder(orderTOList);
         } catch (RuntimeException e) {
-            assertEquals("Cannot create Order", e.getMessage());
+            assertEquals("Cannot create order because the order list is null", e.getMessage());
         }
     }
 

@@ -39,9 +39,10 @@ public class OrderController {
     }
     @GetMapping
     public ResponseEntity<OrderResponse> checkStatusOrder(@RequestParam int numberOrder){
+        log.info("check status order number " + numberOrder);
         OrderResponse orderResponse = orderService.checkOrder(numberOrder);
         if(Objects.nonNull(orderResponse) ){
-            log.info("check order");
+            log.info("order number " + numberOrder + " is checked");
             return new ResponseEntity<>(orderResponse, HttpStatus.OK);
         }else{
             log.error("cannot check order because order response is null");
