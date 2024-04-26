@@ -38,7 +38,6 @@ public class OrderControllerTest {
         when(orderService.createOrder(Arrays.asList(orderTO))).thenReturn(orderResponses);
 
         ResponseEntity<List<OrderResponse>> responseEntity = orderController.createOrder(Arrays.asList(orderTO));
-
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(orderResponses, responseEntity.getBody());
 
@@ -63,9 +62,7 @@ public class OrderControllerTest {
         OrderTO orderTO = new OrderTO();
 
         when(orderService.createOrder(Arrays.asList(orderTO))).thenReturn(null);
-
         ResponseEntity<List<OrderResponse>> responseEntity = orderController.createOrder(Arrays.asList(orderTO));
-
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
     }
@@ -78,7 +75,6 @@ public class OrderControllerTest {
         when(orderService.checkOrder(numberOrder)).thenReturn(orderResponse);
 
         ResponseEntity<OrderResponse> responseEntity = orderController.checkStatusOrder(numberOrder);
-
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(orderResponse, responseEntity.getBody());
 

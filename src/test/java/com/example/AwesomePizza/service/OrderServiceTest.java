@@ -41,10 +41,8 @@ public class OrderServiceTest {
         OrderTO orderTO = new OrderTO();
         orderTO.setPizzaTypeTOList(pizzaTypeTOList);
 
-        // Calling the service method
         List<OrderResponse> result = orderService.createOrder(Arrays.asList(orderTO));
 
-        // Verifying the result
         assertEquals(1, result.size());
         assertEquals("Order in preparation", result.get(0).getStatus());
     }
@@ -55,25 +53,19 @@ public class OrderServiceTest {
         OrderResponse orderResponse = buildOrderResponse();
         orders.put(orderNumber, orderResponse);
 
-        // Creating a custom OrderServiceImpl instance for testing
         OrderServiceImpl orderServiceWithCustomOrders = new OrderServiceImpl(orders, new AtomicInteger(2));
-
-        // Calling the service method
         OrderResponse result = orderServiceWithCustomOrders.checkOrder(orderNumber);
-
-        // Verifying the result
         assertEquals(orderResponse, result);
     }
 
     @Test(expected = NoSuchOrderException.class)
-    public void testCheckOrder_OrderNotFound() {
+    public void testCheckOrderNotFound() {
         int orderNumber = 1;
         orderService.checkOrder(orderNumber);
     }
 
     @Test
-    public void testCheckOrder_OrderNotReady() {
-        // Mocking input data
+    public void testCheckOrderNotReady() {
         int orderNumber = 2;
         OrderResponse orderResponse = buildOrderResponse();
         orderResponse.setNumberOrder(2);
@@ -81,15 +73,12 @@ public class OrderServiceTest {
         orders.put(2, orderResponse);
 
         OrderServiceImpl orderServiceWithCustomOrders = new OrderServiceImpl(orders, new AtomicInteger(2));
-
-        // Calling the service method
         OrderResponse result = orderServiceWithCustomOrders.checkOrder(orderNumber);
-
         assertEquals("The order " + orderNumber + " is not ready", result.getStatus());
     }
 
     @Test
-    public void testCheckOrder_OrderReady() {
+    public void testCheckOrderReady() {
         int orderNumber = 1;
         OrderResponse orderResponse = buildOrderResponse();
         orders.put(orderNumber, orderResponse);
